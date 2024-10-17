@@ -12,7 +12,7 @@ class EmailSender:
         load_dotenv()
         self.mail_user = os.getenv('MAIL_USER')
         self.mail_password = os.getenv('MAIL_PASS')
-        self.smtp_server = "smtp.gmail.com"
+        self.smtp_server = 'smtp.gmail.com'
         self.smtp_port = 587
     
     def send_email(self, recipient_email, subject, body):
@@ -42,7 +42,7 @@ def send_email():
         recipient_email = data.get('email')
         subject = data.get('subject')
         body = data.get('body')
-
+        
         # Initialize EmailSender
         email_sender = EmailSender()
         
