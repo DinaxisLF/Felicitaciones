@@ -55,8 +55,23 @@ def registrar_docente():
         return jsonify({'mensaje': "Error", 'exito': False}), 404
     
 
+@docentes_api.route('/api/docentes/<id>', methods = ["PUT"])
+def actulizar_docente(id):
+    try:
+        cursor = db.connection.cursor()
+        query = """UPDATE docente SET Nombre = '{0}' , Apellido = '{1}', Fecha_de_Nacimiento = '{2}', 
+        Correo = '{3}', Estado  = '{4}' WHERE ID_docente = '{5}'""".format(request.json['Nombre'], request.json['Apellido']
+                                                            ,request.json['Fecha_de_Nacimiento']
+                                                            , request.json['Correo']
+                                                            ,request.json['Estado'], id)
+        cursor.execute(query)
+        db.connection.commit()
+        return jsonify({'message': "Docente Actualizado.", 'exito': True})
+    except Exception as ex:
+        return jsonify({'message':"Docente no encontrado",'exito': False})
 
-@docentes_api.route('/api/docentes/<id>', methods = ['PUT'])
+
+@docentes_api.route('/api/docentes/<id>', methods = ['DELETE'])
 def eliminar_docente(id):
     try:
         cursor = db.connection.cursor()
