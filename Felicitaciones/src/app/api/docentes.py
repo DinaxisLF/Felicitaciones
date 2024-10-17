@@ -21,7 +21,7 @@ def list():
     except Exception as ex:
         return jsonify({'message':"Error en la consulta"})
     
-@docentes_api.route('/api//docentes/<id>', methods=['GET'])
+@docentes_api.route('/api/docentes/<id>', methods=['GET'])
 def consult(id):
     try:
         cursor = db.connection.cursor()
@@ -39,7 +39,7 @@ def consult(id):
         return jsonify({'message':"Error en la consulta"})
 
 
-@docentes_api.route('/api//docentes', methods=['POST'])
+@docentes_api.route('/api/docentes', methods=['POST'])
 def registrar_docente():
     try:
         cursor = db.connection.cursor()
@@ -56,7 +56,7 @@ def registrar_docente():
     
 
 
-@docentes_api.route('/api//docentes/<id>', methods = ['PUT'])
+@docentes_api.route('/api/docentes/<id>', methods = ['PUT'])
 def eliminar_docente(id):
     try:
         cursor = db.connection.cursor()
@@ -66,3 +66,6 @@ def eliminar_docente(id):
         return jsonify({'message': "Docente eliminado", 'exito': True})
     except Exception as ex:
         return jsonify({'message':"Docente no encontrado",'exito': False})
+
+
+
