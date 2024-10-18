@@ -1,0 +1,26 @@
+body {
+    background-color: #f8f9fa; /* Fondo claro */
+}
+
+h1 {
+    color: #343a40; /* Texto oscuro para el título */
+}
+
+table {
+    background-color: #ffffff; /* Fondo blanco para la tabla */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+th {
+    background-color: #007bff !important; /* Color primario de Bootstrap */
+    color: #ffffff !important; /* Texto blanco */
+    font-weight: bold; /* Texto en negrita */
+}
+
+td {
+    vertical-align: middle;
+}
+
+.container {
+    max-width: 1000px; /* Ancho máximo ajustado */
+}
