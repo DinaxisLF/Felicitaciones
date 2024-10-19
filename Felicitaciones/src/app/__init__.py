@@ -21,8 +21,19 @@ def init_app():
     from app.api import docentes_api
     from app.routes.views import views_blueprint
     from app.email_service import email_sender_class
+    from app.api.birthday_check import BirthdayChecker
     app.register_blueprint(docentes_api)
     app.register_blueprint(email_sender_class)
     app.register_blueprint(views_blueprint)
+
+ # Verificar cumpleaños al correr run.py
+    with app.app_context():
+        docentes_cumpleanos = BirthdayChecker.check_birthdays()
+        if docentes_cumpleanos:
+            print("Hoy es el cumpleaños de los siguientes docentes:")
+            for docente in docentes_cumpleanos:
+                print(f"Docente: {docente[0]} {docente[1]}")
+        else:
+            print("Hoy no es el cumpleaños de ningún docente.")
 
     return app
