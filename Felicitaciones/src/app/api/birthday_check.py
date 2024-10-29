@@ -12,7 +12,7 @@ class BirthdayChecker:
         
         # query verificar cumpleaños
         query = """
-        SELECT Nombre, Apellido 
+        SELECT Nombre, Apellido, Correo
         FROM docente 
         WHERE DAY(Fecha_de_Nacimiento) = %s AND MONTH(Fecha_de_Nacimiento) = %s
         """

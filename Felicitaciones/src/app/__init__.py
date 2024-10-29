@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 from config import config
+from app.email_service.email_sender import EmailSender
+
 
 
 db = MySQL()
@@ -30,9 +32,16 @@ def init_app():
     with app.app_context():
         docentes_cumpleanos = BirthdayChecker.check_birthdays()
         if docentes_cumpleanos:
+            email_sender = EmailSender()
             print("Hoy es el cumpleaños de los siguientes docentes:")
             for docente in docentes_cumpleanos:
                 print(f"Docente: {docente[0]} {docente[1]}")
+                
+                subject = "¡Feliz Cumpleaños!"
+                body = f"Estimado/a {docente[0]} {docente[1]},\n\n¡Te deseamos un muy feliz cumpleaños!\n\nAtentamente,\nYo."
+
+                email_sender.send_email(docente[2], subject, body)
+
         else:
             print("Hoy no es el cumpleaños de ningún docente.")
 
