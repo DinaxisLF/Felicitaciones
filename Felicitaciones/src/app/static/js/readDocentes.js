@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 deleteButton.className = "btn btn-danger btn-sm";
                 deleteButton.textContent = "Eliminar";
                  // Evento para Eliminar Docente
-                 deleteButton.addEventListener("click", function() {
+                deleteButton.addEventListener("click", function() {
                     eliminarDocente(docente.ID_docente); 
                 });
                 actionsCell.appendChild(deleteButton);

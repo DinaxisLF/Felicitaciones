@@ -7,6 +7,7 @@ from flask import jsonify, request
 from app.email_service import email_sender_class
 
 
+
 class EmailSender:
     def __init__(self):
         load_dotenv()
@@ -15,6 +16,7 @@ class EmailSender:
         self.smtp_server = 'smtp.gmail.com'
         self.smtp_port = 587
     
+    #Send Emails
     def send_email(self, recipient_email, subject, body):
         try:
             msg = MIMEMultipart()
@@ -33,6 +35,8 @@ class EmailSender:
 
         except Exception as e:
             print(f"Failed to send email: {e}")
+
+    
 
 @email_sender_class.route('/email_sender', methods=['POST'])
 def send_email():
