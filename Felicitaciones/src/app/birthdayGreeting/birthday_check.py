@@ -14,6 +14,7 @@ class BirthdayChecker:
         FROM docente
         WHERE DAY(Fecha_de_Nacimiento) = %s
         AND MONTH(Fecha_de_Nacimiento) = %s
+        AND ESTADO != 0
         AND ID_docente NOT IN (
         SELECT ID_docente FROM felicitacion WHERE ID_sistema = 
         (SELECT MAX(ID_sistema) FROM sistema WHERE Fecha_de_ejecucion = %s AND Resultado = 1))
@@ -46,6 +47,7 @@ class BirthdayChecker:
     
         
         return id_sistema, True  
+    
     
     def update_execution_status(self, id_sistema, success):
         cursor = db.connection.cursor()

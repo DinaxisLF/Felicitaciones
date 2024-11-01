@@ -51,7 +51,7 @@ def init_app():
                 print("Hoy es el cumpleaños de los siguientes docentes:")
                 for docente in docentes_cumpleanos:
 
-                    greeting_maker(docente)
+                    pdf = greeting_maker(docente)
 
                     print(f"Docente: {docente[0]} {docente[1]}")
                     
@@ -59,7 +59,7 @@ def init_app():
                     body = f"Estimado/a {docente[0]} {docente[1]},\n\n¡Te deseamos un muy feliz cumpleaños!\n\nAtentamente,\nYo."
                     
                     try:
-                        email_sender.send_email(docente[2], subject, body)
+                        email_sender.send_email(docente[2], subject, body, pdf)
                         birthday.log_email_sent(id_sistema, docente[3], "PDF")
                     except Exception as e:
                         print(f"Error al enviar email al docente: {docente[2]}: {e}")

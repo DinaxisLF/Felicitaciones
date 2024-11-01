@@ -2,7 +2,7 @@
 function eliminarDocente(id) {
     if (confirm("¿Estás seguro de que quieres eliminar este docente?")) {
         fetch(`/api/docentes/${id}`, {
-            method: 'DELETE', // Cambia PUT a DELETE
+            method: 'DELETE', 
             headers: {
                 'Content-Type': 'application/json'
             }

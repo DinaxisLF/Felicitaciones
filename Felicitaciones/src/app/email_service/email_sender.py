@@ -1,6 +1,7 @@
 import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
 from flask import jsonify, request
@@ -17,13 +18,20 @@ class EmailSender:
         self.smtp_port = 587
     
     #Send Emails
-    def send_email(self, recipient_email, subject, body):
+    def send_email(self, recipient_email, subject, body, pdf_path):
         try:
             msg = MIMEMultipart()
             msg['From'] = self.mail_user
             msg['To'] = recipient_email
             msg['Subject'] = subject
             msg.attach(MIMEText(body, 'plain'))
+
+            #Attach pdf file (Greeting)
+            with open(pdf_path, "rb") as f:
+                attach = MIMEApplication(f.read(),_subtype="pdf")
+            pdf_name = os.path.basename(pdf_path)
+            attach.add_header('Content-Disposition','attachment',filename=str(pdf_name))
+            msg.attach(attach)
 
             server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
@@ -35,25 +43,3 @@ class EmailSender:
 
         except Exception as e:
             print(f"Failed to send email: {e}")
-
-    
-
-@email_sender_class.route('/email_sender', methods=['POST'])
-def send_email():
-    try:
-        # Get data from the request
-        data = request.get_json()
-        recipient_email = data.get('email')
-        subject = data.get('subject')
-        body = data.get('body')
-        
-        # Initialize EmailSender
-        email_sender = EmailSender()
-        
-        # Send the email
-        email_sender.send_email(recipient_email, subject, body)
-
-        return jsonify({"message": "Email sent successfully!"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500

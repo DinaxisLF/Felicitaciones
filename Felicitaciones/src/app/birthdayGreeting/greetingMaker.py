@@ -3,6 +3,7 @@ from datetime import date, datetime
 import os
 from dotenv import load_dotenv
 import webbrowser
+import openai
 
 
 
@@ -67,7 +68,7 @@ def greeting_maker(docente):
     pdf.image(btm_right_path, x=215, y=100, w=70)
 
     # Save PDF to a specified path
-    pdf_filename = f"Felicitacion_docente {id_docente}_{date.today()}.pdf"
+    pdf_filename = f"Felicitaciones {name} {lastname}_{date.today()}.pdf"
     pdf_output_path = os.getenv('PDF_PATH_SAVE') + pdf_filename
     pdf.output(pdf_output_path)
     
@@ -75,3 +76,5 @@ def greeting_maker(docente):
 
     #Open PDF
     webbrowser.open(pdf_output_path)
+
+    return pdf_output_path
