@@ -2,11 +2,11 @@ document.getElementById("addDocenteForm").addEventListener("submit", function(e)
     e.preventDefault(); 
 
     const nuevoDocente = {
-        Nombre: document.getElementById("nombre").value,
+        Nombre: document.getElementById("nombreAnadir").value,
         Apellido: document.getElementById("apellido").value,
         Fecha_de_Nacimiento: document.getElementById("fechaNacimiento").value,
         Correo: document.getElementById("correo").value,
-        Estado: document.getElementById("estado").value
+        Estado: document.getElementById("estadoAnadir").value
     };
 
     fetch('/api/docentes', {

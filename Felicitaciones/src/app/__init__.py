@@ -25,9 +25,11 @@ def init_app():
     from app.api import docentes_api
     from app.routes.views import views_blueprint
     from app.email_service import email_sender_class
+    from app.api.filters.filters import filters_blueprint
     app.register_blueprint(docentes_api)
     app.register_blueprint(email_sender_class)
     app.register_blueprint(views_blueprint)
+    app.register_blueprint(filters_blueprint)
 
     from app.birthdayGreeting.birthday_check import BirthdayChecker
     
