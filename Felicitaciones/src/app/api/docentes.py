@@ -6,21 +6,45 @@ from app.api import docentes_api
 @docentes_api.route('/api/docentes', methods=['GET'])
 def list():
     try:
+
+        per_page = int(request.args.get('per_page', 4))  # Num filas por pag
+        page = int(request.args.get('page', 1))  # Pagina inicial
+        offset = (page - 1) * per_page
+
         cursor = db.connection.cursor()
-        query = "SELECT * FROM docente"
-        cursor.execute(query)
+        query = "SELECT * FROM docente LIMIT %s OFFSET %s"
+        cursor.execute(query, (per_page, offset))
         response = cursor.fetchall()
-        teachers = []
-        
-        for teacher in response:
-            data={'ID_docente':teacher[0],'Nombre':teacher[1], 'Apellido':teacher[2], 
-                'Fecha_de_Nacimiento':teacher[3], 'Correo':teacher[4], 'Estado':teacher[5]}
-            teachers.append(data)
-        print(teachers)
-        return jsonify(teachers, 200)
+
+        teachers = [
+            {
+                'ID_docente': teacher[0],
+                'Nombre': teacher[1],
+                'Apellido': teacher[2],
+                'Fecha_de_Nacimiento': teacher[3],
+                'Correo': teacher[4],
+                'Estado': teacher[5]
+            }
+            for teacher in response
+        ]
+
+        # Contar total
+        cursor.execute("SELECT COUNT(*) FROM docente")
+        total_docentes = cursor.fetchone()[0]
+        total_pages = (total_docentes + per_page - 1) // per_page
+
+        return jsonify({
+            'teachers': teachers,
+            'page': page,
+            'per_page': per_page,
+            'total_pages': total_pages,
+            'total_docentes': total_docentes
+        }), 200
+
     except Exception as ex:
-        return jsonify({'message':"Error en la consulta"})
-    
+        return jsonify({'message': "Error en la consulta"}), 500
+
+
 @docentes_api.route('/api/docentes/<id>', methods=['GET'])
 def consult(id):
     try:
