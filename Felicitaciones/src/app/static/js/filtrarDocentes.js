@@ -1,89 +1,71 @@
-async function filtrarDocentes() {
+function filtrarDocentes(page = 1) {
     const nombre = document.getElementById("nombre").value;
     const estado = document.getElementById("estado").value;
     const mesNacimiento = document.getElementById("mesNacimiento").value;
 
-    const url = `/filtrar_docentes?nombre=${nombre}&estado=${estado}&mesNacimiento=${mesNacimiento}`;
+    fetch(`/filtrar_docentes?nombre=${nombre}&estado=${estado}&mesNacimiento=${mesNacimiento}&page=${page}&per_page=${perPage}`)
+        .then(response => response.json())
+        .then(data => {
+            const docentesArray = data.teachers;
+            const itemsList = document.getElementById("items-list");
+            itemsList.innerHTML = "";
 
-    try {
-        const response = await fetch(url);
-        const docentes = await response.json();
+            if (Array.isArray(docentesArray)) {
+                docentesArray.forEach(docente => {
+                    const row = document.createElement("tr");
+                    const columns = ['ID_docente', 'Nombre', 'Apellido', 'Fecha_de_Nacimiento', 'Correo', 'Estado'];
+                    columns.forEach(column => {
+                        const cell = document.createElement("td");
+                        cell.textContent = docente[column];
+                        row.appendChild(cell);
+                    });
 
-        const tablaBody = document.getElementById("items-list");
-        tablaBody.innerHTML = "";
+                    const actionsCell = document.createElement("td");
+                    const editButton = document.createElement("button");
+                    editButton.className = "btn btn-warning btn-sm me-2";
+                    editButton.textContent = "Editar";
+                    editButton.addEventListener("click", function () {
+                        cargarDatosDocente(docente.ID_docente, docente.Nombre, docente.Apellido, docente.Fecha_de_Nacimiento, docente.Correo, docente.Estado);
+                    });
+                    actionsCell.appendChild(editButton);
 
-        docentes.forEach(docente => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${docente.ID_docente}</td>
-                <td>${docente.Nombre}</td>
-                <td>${docente.Apellido}</td>
-                <td>${new Date(docente.Fecha_de_Nacimiento).toDateString()}</td>
-                <td>${docente.Correo}</td>
-                <td>${docente.Estado}</td> 
-                <td>
-                    <button class="btn btn-warning btn-edit" data-id="${docente.ID_docente}">Editar</button>
-                    <hr>
-                    <button class="btn btn-danger btn-delete" data-id="${docente.ID_docente}">Eliminar</button>
-                </td>
-            `;
-            tablaBody.appendChild(row);
+                    const divider = document.createElement("hr");
+                    divider.style.margin = "0.5rem 0"; 
+                    actionsCell.appendChild(divider);
 
-            const editButton = row.querySelector(".btn-edit");
-            editButton.addEventListener("click", function () {
-                cargarDatosDocente(docente.ID_docente, docente.Nombre, docente.Apellido, docente.Fecha_de_Nacimiento, docente.Correo, docente.Estado);
-            });
+                    const deleteButton = document.createElement("button");
+                    deleteButton.className = "btn btn-danger btn-sm";
+                    deleteButton.textContent = "Eliminar";
+                    deleteButton.addEventListener("click", function () {
+                        eliminarDocente(docente.ID_docente);
+                    });
+                    actionsCell.appendChild(deleteButton);
 
-            const deleteButton = row.querySelector(".btn-delete");
-            deleteButton.addEventListener("click", function () {
-                eliminarDocente(docente.ID_docente);
-            });
+                    row.appendChild(actionsCell);
+                    itemsList.appendChild(row);
+                });
+
+                actualizarPaginacion(data.page, data.total_pages); 
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
         });
-    } catch (error) {
-        console.error("Error al obtener los datos:", error);
-    }
 }
 
-async function reiniciarFiltros() {
+document.getElementById("buscar-docentes-btn").addEventListener("click", function() {
+    filtrarDocentes(); 
+});
 
+
+function reiniciarFiltros() {
     document.getElementById("nombre").value = "";
     document.getElementById("estado").value = "";
     document.getElementById("mesNacimiento").value = "";
+    cargarDocentes(1); 
+}
 
-    try {
-        const response = await fetch('/filtrar_docentes'); 
-        const docentes = await response.json();
-
-        const tablaBody = document.getElementById("items-list");
-        tablaBody.innerHTML = "";
-
-        docentes.forEach(docente => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${docente.ID_docente}</td>
-                <td>${docente.Nombre}</td>
-                <td>${docente.Apellido}</td>
-                <td>${new Date(docente.Fecha_de_Nacimiento).toDateString()}</td>
-                <td>${docente.Correo}</td>
-                <td>${docente.Estado}</td> 
-                <td>
-                    <button class="btn btn-warning btn-edit" data-id="${docente.ID_docente}">Editar</button>
-                    <button class="btn btn-danger btn-delete" data-id="${docente.ID_docente}">Eliminar</button>
-                </td>
-            `;
-            tablaBody.appendChild(row);
-
-            const editButton = row.querySelector(".btn-edit");
-            editButton.addEventListener("click", function () {
-                cargarDatosDocente(docente.ID_docente, docente.Nombre, docente.Apellido, docente.Fecha_de_Nacimiento, docente.Correo, docente.Estado);
-            });
-
-            const deleteButton = row.querySelector(".btn-delete");
-            deleteButton.addEventListener("click", function () {
-                eliminarDocente(docente.ID_docente);
-            });
-        });
-    } catch (error) {
-        console.error("Error al obtener los datos:", error);
-    }
+const reiniciarBtn = document.getElementById("reiniciarBtn");
+if (reiniciarBtn) {
+    reiniciarBtn.addEventListener("click", reiniciarFiltros);
 }

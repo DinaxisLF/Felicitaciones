@@ -1,12 +1,12 @@
 let currentPage = 1;
 const perPage = 4;
 
-function cargarDocentes(page) {
+
+function cargarDocentes(page = 1) {
     fetch(`/api/docentes?page=${page}&per_page=${perPage}`)
         .then(response => response.json())
         .then(data => {
             const docentesArray = data.teachers;
-
             if (Array.isArray(docentesArray)) {
                 const itemsList = document.getElementById("items-list");
                 itemsList.innerHTML = "";
@@ -14,7 +14,6 @@ function cargarDocentes(page) {
                 docentesArray.forEach(docente => {
                     const row = document.createElement("tr");
                     const columns = ['ID_docente', 'Nombre', 'Apellido', 'Fecha_de_Nacimiento', 'Correo', 'Estado'];
-
                     columns.forEach(column => {
                         const cell = document.createElement("td");
                         cell.textContent = docente[column];
@@ -30,7 +29,6 @@ function cargarDocentes(page) {
                     });
                     actionsCell.appendChild(editButton);
 
-                    // Divisor
                     const divider = document.createElement("hr");
                     divider.style.margin = "0.5rem 0"; 
                     actionsCell.appendChild(divider);
@@ -47,7 +45,6 @@ function cargarDocentes(page) {
                     itemsList.appendChild(row);
                 });
 
-
                 actualizarPaginacion(data.page, data.total_pages);
             } else {
                 console.error("Unexpected data format:", data);
@@ -58,8 +55,7 @@ function cargarDocentes(page) {
         });
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
     cargarDocentes(currentPage);
 });
-
-
