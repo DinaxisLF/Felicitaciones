@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from config import config
 from app.email_service.email_sender import EmailSender
 from app.birthdayGreeting.greetingMaker import greeting_maker
-
+from app.api.login.login import login_blueprint
 
 
 
@@ -30,6 +30,7 @@ def init_app():
     app.register_blueprint(email_sender_class)
     app.register_blueprint(views_blueprint)
     app.register_blueprint(filters_blueprint)
+    app.register_blueprint(login_blueprint, url_prefix='/api')
 
     from app.birthdayGreeting.birthday_check import BirthdayChecker
     

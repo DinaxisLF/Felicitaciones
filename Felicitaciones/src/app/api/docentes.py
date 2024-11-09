@@ -1,5 +1,4 @@
 from flask import jsonify, request
-from app import db
 from app.api import docentes_api
 
 
@@ -11,6 +10,7 @@ def list():
         page = int(request.args.get('page', 1))  # Pagina inicial
         offset = (page - 1) * per_page
 
+        from app import db
         cursor = db.connection.cursor()
         query = "SELECT * FROM docente LIMIT %s OFFSET %s"
         cursor.execute(query, (per_page, offset))
@@ -48,6 +48,7 @@ def list():
 @docentes_api.route('/api/docentes/<id>', methods=['GET'])
 def consult(id):
     try:
+        from app import db
         cursor = db.connection.cursor()
         query = "SELECT * FROM docente where ID_docente = '{0}'".format(id)
         cursor.execute(query)
@@ -66,22 +67,30 @@ def consult(id):
 @docentes_api.route('/api/docentes', methods=['POST'])
 def registrar_docente():
     try:
+        from app import db
+        nombre = request.json['Nombre']
+        apellido = request.json['Apellido']
+        fecha_nacimiento = request.json['Fecha_de_Nacimiento']
+        correo = request.json['Correo']
+        estado = request.json['Estado']
+        
         cursor = db.connection.cursor()
         query = """INSERT INTO docente (Nombre, Apellido, Fecha_de_Nacimiento, Correo, Estado) 
-        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')""".format(request.json['Nombre'], request.json['Apellido']
-                                                            ,request.json['Fecha_de_Nacimiento']
-                                                            , request.json['Correo']
-                                                            ,request.json['Estado'])
-        cursor.execute(query)
+                   VALUES (%s, %s, %s, %s, %s)"""
+        print(query)  # Agregar print para revisar la consulta
+        cursor.execute(query, (nombre, apellido, fecha_nacimiento, correo, estado))
         db.connection.commit()
+        
         return jsonify({'message': "Docente Registrado.", 'exito': True})
     except Exception as ex:
-        return jsonify({'mensaje': "Error", 'exito': False}), 404
+        return jsonify({'mensaje': f"Error: {str(ex)}", 'exito': False}), 404
+
     
 
 @docentes_api.route('/api/docentes/<id>', methods = ["PUT"])
 def actulizar_docente(id):
     try:
+        from app import db
         cursor = db.connection.cursor()
         query = """UPDATE docente SET Nombre = '{0}' , Apellido = '{1}', Fecha_de_Nacimiento = '{2}', 
         Correo = '{3}', Estado  = '{4}' WHERE ID_docente = '{5}'""".format(request.json['Nombre'], request.json['Apellido']
@@ -98,6 +107,7 @@ def actulizar_docente(id):
 @docentes_api.route('/api/docentes/<id>', methods = ['DELETE'])
 def eliminar_docente(id):
     try:
+        from app import db
         cursor = db.connection.cursor()
         query = "DELETE FROM docente WHERE ID_docente = '{0}'".format(id)
         cursor.execute(query)
