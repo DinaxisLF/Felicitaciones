@@ -29,11 +29,14 @@ async function login() {
             const result = await response.json();
             messageDiv.innerText = result.message;
             messageDiv.style.color = 'green';
-            window.location.href = "/docentes"; 
+
+            // Redirect on successful login
+            window.location.href = "/docentes";  // Adjust this path as needed
         } else {
             const result = await response.json();
             messageDiv.innerText = result.message;
             messageDiv.style.color = 'red';
+            console.log(result)
         }
     } catch (error) {
         console.error("Error en el login:", error);

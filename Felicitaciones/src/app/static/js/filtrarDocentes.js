@@ -1,71 +1,53 @@
-function filtrarDocentes(page = 1) {
-    const nombre = document.getElementById("nombre").value;
-    const estado = document.getElementById("estado").value;
-    const mesNacimiento = document.getElementById("mesNacimiento").value;
+document.getElementById('buscar-docentes-btn').addEventListener('click', function() {
+    // Get filter values
+    let nombre = document.getElementById('nombre').value;
+    let estado = document.getElementById('estado').value;
+    let mesNacimiento = document.getElementById('mesNacimiento').value;
 
-    fetch(`/filtrar_docentes?nombre=${nombre}&estado=${estado}&mesNacimiento=${mesNacimiento}&page=${page}&per_page=${perPage}`)
+    // Fetch the data using AJAX or a fetch request
+    fetch(`/api/docentes?nombre=${nombre}&estado=${estado}&mesNacimiento=${mesNacimiento}`)
         .then(response => response.json())
         .then(data => {
-            const docentesArray = data.teachers;
-            const itemsList = document.getElementById("items-list");
-            itemsList.innerHTML = "";
+            let teachers = data.teachers;
+            let tableBody = document.getElementById('items-list');
+            tableBody.innerHTML = ''; // Clear the table body before updating
 
-            if (Array.isArray(docentesArray)) {
-                docentesArray.forEach(docente => {
-                    const row = document.createElement("tr");
-                    const columns = ['ID_docente', 'Nombre', 'Apellido', 'Fecha_de_Nacimiento', 'Correo', 'Estado'];
-                    columns.forEach(column => {
-                        const cell = document.createElement("td");
-                        cell.textContent = docente[column];
-                        row.appendChild(cell);
-                    });
+            // Add rows to the table dynamically
+            teachers.forEach(teacher => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${teacher.ID_docente}</td>
+                    <td>${teacher.Nombre} ${teacher.Apellido}</td>
+                    <td>${teacher.Fecha_de_Nacimiento}</td>
+                    <td>${teacher.Correo}</td>
+                    <td>${teacher.Estado}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-edit">
+                            <i class="fas fa-edit fa-xs"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-delete">
+                            <i class="fas fa-trash fa-xs"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
 
-                    const actionsCell = document.createElement("td");
-                    const editButton = document.createElement("button");
-                    editButton.className = "btn btn-warning btn-sm me-2";
-                    editButton.textContent = "Editar";
-                    editButton.addEventListener("click", function () {
-                        cargarDatosDocente(docente.ID_docente, docente.Nombre, docente.Apellido, docente.Fecha_de_Nacimiento, docente.Correo, docente.Estado);
-                    });
-                    actionsCell.appendChild(editButton);
-
-                    const divider = document.createElement("hr");
-                    divider.style.margin = "0.5rem 0"; 
-                    actionsCell.appendChild(divider);
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.className = "btn btn-danger btn-sm";
-                    deleteButton.textContent = "Eliminar";
-                    deleteButton.addEventListener("click", function () {
-                        eliminarDocente(docente.ID_docente);
-                    });
-                    actionsCell.appendChild(deleteButton);
-
-                    row.appendChild(actionsCell);
-                    itemsList.appendChild(row);
-                });
-
-                actualizarPaginacion(data.page, data.total_pages); 
-            }
+            // Handle pagination if necessary (not implemented in this example)
         })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-        });
-}
-
-document.getElementById("buscar-docentes-btn").addEventListener("click", function() {
-    filtrarDocentes(); 
+        .catch(error => console.error('Error fetching teachers:', error));
 });
 
 
 function reiniciarFiltros() {
-    document.getElementById("nombre").value = "";
-    document.getElementById("estado").value = "";
-    document.getElementById("mesNacimiento").value = "";
-    cargarDocentes(1); 
+    document.getElementById('nombre').value = '';
+    document.getElementById('estado').value = '';
+    document.getElementById('mesNacimiento').value = '';
+
+    // Trigger the search again after reset
+    document.getElementById('buscar-docentes-btn').click();
 }
 
-const reiniciarBtn = document.getElementById("reiniciarBtn");
-if (reiniciarBtn) {
-    reiniciarBtn.addEventListener("click", reiniciarFiltros);
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
 }

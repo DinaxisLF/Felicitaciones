@@ -1,11 +1,10 @@
 import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
+from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
-from flask import jsonify, request
-from app.email_service import email_sender_class
+from email import encoders
 
 
 
@@ -18,7 +17,7 @@ class EmailSender:
         self.smtp_port = 587
     
     #Send Emails
-    def send_email(self, recipient_email, subject, body, pdf_path):
+    def send_email(self, recipient_email, subject, body, pdf_buffer):
         try:
             msg = MIMEMultipart()
             msg['From'] = self.mail_user
@@ -26,12 +25,14 @@ class EmailSender:
             msg['Subject'] = subject
             msg.attach(MIMEText(body, 'plain'))
 
-            #Attach pdf file (Greeting)
-            with open(pdf_path, "rb") as f:
-                attach = MIMEApplication(f.read(),_subtype="pdf")
-            pdf_name = os.path.basename(pdf_path)
-            attach.add_header('Content-Disposition','attachment',filename=str(pdf_name))
-            msg.attach(attach)
+    
+
+                # Attach the PDF file
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(pdf_buffer.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', 'attachment; filename="Felicitaciones.pdf"')
+            msg.attach(part)
 
             server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()

@@ -44,43 +44,45 @@ html, body {
     background-color: #d40000;
 }
 
-.btn-warning, .btn-danger {
-    width: 30px; 
-    height: 30px; 
-    justify-content: center;
+.forms {
+    background: rgba(0, 0, 0, 0.45);
+    width: 20rem;
+    padding: 2rem;
+    margin-top: 1rem;
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 0.3rem 0.5rem;
+    color: white;
+    border-radius: 10px;
 }
 
-.btn-success {
-    width: 100px; 
-    height: 40px; 
-    justify-content: center;
-    align-items: center;
-    margin-left:900px;
-    margin-top: 10px;
-}
-
-
-
-
-table {
-    table-layout: fixed;
-    margin-top: 60px;
+#register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .card {
     margin-top: 60px;
 }
 
+.icon {
+    margin-left: 100px;
+}
 
-th {
-    word-wrap: break-word;
-    white-space: normal;
+.form-label{
+    margin-left: 40px;
 }
-td {
-    max-height: 2rem; /* Adjust as needed */
-    word-wrap: break-word;
-    white-space: normal;
-}
+
+
+
+
+
+
+
+
+
+
+
 

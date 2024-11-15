@@ -3,10 +3,10 @@ from flask import Blueprint
 docentes_api = Blueprint('docentes', __name__)
 
 #Routes from docentes.py
-from app.api import docentes
+from . import docentes
+from . import login
+from . import felicitaciones
 
 
-#Ruta para Login
-from .login.login import login_blueprint
 
 
