@@ -46,7 +46,7 @@ def init_app():
 
     #APScheduler
     scheduler = BackgroundScheduler()
-    scheduler.add_job(greeting_task, 'cron', hour=19, minute=5, second=35, misfire_grace_time=3600)
+    scheduler.add_job(greeting_task, 'cron', hour=14, minute=57, second=10, misfire_grace_time=3600)
     scheduler.start()
 
     return app
@@ -70,21 +70,23 @@ def greeting_task():
 
             if docentes_cumpleanos:    
                 success = True
-                print("Hoy es el cumpleaños de los siguientes docentes:")
-                for docente in docentes_cumpleanos:
+                print("Hoy es el cumpleaños de los siguientes docentes:\n")
+                print(docentes_cumpleanos)
+                
+                
+                subject = "¡Feliz Cumpleaños!"
+                body = ("Estimado/a {name} {lastname},\n\n¡Te deseamos un muy feliz cumpleaños!"
+                        "\n\nAtentamente,\nMtro. Jose Alfredo Peña Ramos")
+                pdfs = greeting_maker(docentes_cumpleanos,subject, body)
 
-                    subject = "¡Feliz Cumpleaños!"
-                    body = f"Estimado/a {docente[0]} {docente[1]},\n\n¡Te deseamos un muy feliz cumpleaños!\n\nAtentamente,\nMtro. Jose Alfredo Peña Ramos"
-                    pdf = greeting_maker(docente,subject, body)
-
-
-                    print(f"Docente: {docente[0]} {docente[1]}")
-                        
-                    try:
-                        birthday.log_email_sent(id_sistema, docente[3], pdf)
-                    except Exception as e:
-                        print(f"Error al enviar email al docente: {docente[2]}: {e}")
-                        success = False
+            
+                try:
+                    for docente, pdf_link in zip(docentes_cumpleanos, pdfs): 
+                        print(f"Logging email for docente: {docente[2]} with PDF URL: {pdf_link}")
+                        birthday.log_email_sent(id_sistema, docente[3], pdf_link)  
+                except Exception as e:
+                    print(f"Error al enviar email al docente: {docente[2]}: {e}")
+                    success = False
 
 
                 birthday.update_execution_status(id_sistema, success)

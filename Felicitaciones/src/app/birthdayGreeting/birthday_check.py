@@ -56,8 +56,12 @@ class BirthdayChecker:
         cursor.close()
 
     #Save the pdf link sent by email
-    def log_email_sent(self, id_sistema, id_docente, pdf_link):
+    def log_email_sent(self, id_sistema, docente, pdf_link):
         cursor = db.connection.cursor()
-        cursor.execute("INSERT INTO felicitacion (ID_sistema, ID_docente, PDF) VALUES (%s, %s, %s)", (id_sistema, id_docente, pdf_link))
-        db.connection.commit()
-        cursor.close()
+
+        data = (id_sistema, docente, pdf_link) 
+
+        cursor.execute("INSERT INTO felicitacion (ID_sistema, ID_docente, PDF) VALUES (%s, %s, %s)", data)
+
+        db.connection.commit()  
+        cursor.close() 
