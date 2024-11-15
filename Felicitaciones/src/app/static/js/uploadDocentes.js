@@ -16,7 +16,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
         .then(data => {
             if (data.exito) {
                 alert('Docentes registrados exitosamente');
-                // Optionally, close the modal after success
                 $('#uploadDocentes').modal('hide'); // Close the modal
                 fetchDocentes(currentPage); // Refresh the table
             } else {

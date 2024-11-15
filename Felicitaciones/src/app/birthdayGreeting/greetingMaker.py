@@ -54,7 +54,7 @@ class EmailSender:
 
 
 def init_firebase():
-    #load_dotenv()
+
     cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS"))
     firebase_admin.initialize_app(cred, {"storageBucket": "tpe-project-31e9a.appspot.com"})
 
@@ -124,7 +124,7 @@ def greeting_maker(docente,subject, body):
     # Create a temporary file to store the PDF
     with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf:
         pdf.output(temp_pdf.name)  # Save the PDF to the temporary file
-        temp_pdf.seek(0)  # Go to the start of the file for reading
+        temp_pdf.seek(0)  
 
         # Initialize Firebase if not already done
         init_firebase()

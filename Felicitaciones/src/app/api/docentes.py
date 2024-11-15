@@ -193,25 +193,20 @@ def registrar_docente():
             # Process the file with pandas
             df = pd.read_excel(filepath)
 
-            # Here you can validate the data before processing further, as shown in the earlier steps
 
-            # Process the file (for example, inserting records into your database)
             for index, row in df.iterrows():
-                # Example data insertion, adjust as per your logic
                 nombre = row['Nombre']
                 apellido = row['Apellido']
                 fecha_nacimiento = row['Fecha_de_Nacimiento']
                 correo = row['Correo']
                 estado = row['Estado']
                 from app import db
-                # Insert the data into your database
                 cursor = db.connection.cursor()
                 query = """INSERT INTO docente (Nombre, Apellido, Fecha_de_Nacimiento, Correo, Estado) 
                         VALUES (%s, %s, %s, %s, %s)"""
                 cursor.execute(query, (nombre, apellido, fecha_nacimiento, correo, estado))
                 db.connection.commit()
 
-            # Optionally, remove the file after processing
             os.remove(filepath)
 
             return jsonify({'message': 'Docentes uploaded and saved successfully!', 'exito': True})

@@ -52,7 +52,7 @@ def felicitaciones_list():
         cursor.execute(query, tuple(params))
         response = cursor.fetchall()
 
-        # Mapping response to a dictionary for easier consumption
+
         felicitaciones = [
             {
                 'ID_felicitacion': felicitacion[0],

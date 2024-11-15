@@ -6,6 +6,8 @@ env/
 __pycache__/
 serviceAccountKey.json
 
+/uploads/temp/
+
 # Ignore compiled Python files
 *.pyc
 *.pyo

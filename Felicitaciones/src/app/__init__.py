@@ -2,7 +2,6 @@ from flask import Flask, render_template
 from flask_mysqldb import MySQL
 from config import config
 from flask_login import LoginManager
-from app.email_service.email_sender import EmailSender
 from app.birthdayGreeting.greetingMaker import greeting_maker
 from app.api.login import User
 from dotenv import load_dotenv
@@ -42,9 +41,7 @@ def init_app():
     #Register Blueprints
     from app.api import docentes_api
     from app.routes.views import views_blueprint
-    from app.email_service import email_sender_class
     app.register_blueprint(docentes_api)
-    app.register_blueprint(email_sender_class)
     app.register_blueprint(views_blueprint)
 
     #APScheduler
@@ -61,9 +58,7 @@ def greeting_task():
 
     with app.app_context():
         from app.birthdayGreeting.birthday_check import BirthdayChecker
-        from app.email_service.email_sender import EmailSender
         birthday = BirthdayChecker()
-        email_sender = EmailSender()
 
         id_sistema, new_execution = birthday.log_execution()
 
